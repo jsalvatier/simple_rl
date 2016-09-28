@@ -3,9 +3,9 @@
 class State(object):
     ''' Abstract State class '''
 
-    def __init__(self, data):
+    def __init__(self, data, is_terminal=False):
         self.data = data
-        self._is_terminal = False
+        self._is_terminal = is_terminal
 
     def features(self):
     	'''
