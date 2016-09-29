@@ -26,11 +26,15 @@ class State(object):
         self._is_terminal = is_term
 
     def __str__(self):
-        return "s." + str(self.data)
+        return "s." + str(self.data) + " terminal: " + str(self.is_terminal())
+
+    def __repr__(self):
+        return str(self)
+
 
     def __eq__(self, other):
         return isinstance(other, State) and self.data == other.data
 
     def __hash__(self):
-        d = tuple(map(tuple, self.data))
+        d = tuple(self.data)
         return hash((d, self._is_terminal))

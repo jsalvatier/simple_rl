@@ -80,11 +80,11 @@ class GradientBoostingAgent(QLearnerAgent):
         while len(features) < self.max_state_features:
             features = np.append(features, 0)
 
+        features = np.append(features, [self.actions.index(action)])
         # Reshape per update to cluster regression in sklearn 0.17.
-        reshaped_features = features.reshape(1, -1)
+        features = features.reshape(1, -1)
 
-        reshaped_features = np.append(reshaped_features, [self.actions.index(action)])
-        return reshaped_features
+        return features
 
     def add_new_weak_learner(self):
         '''
