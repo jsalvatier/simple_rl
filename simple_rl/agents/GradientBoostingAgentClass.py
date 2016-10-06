@@ -60,10 +60,17 @@ class GradientBoostingAgent(QLearnerAgent):
             # Default Q value.
             return 0
 
+        if state.is_terminal():
+            return 0
+
         features = self._pad_features_with_zeros(state, action)
 
         # Compute Q(s,a)
-        predictions = [h.predict(features)[0] for h in self.weak_learners]
+        import random
+        #learners = random.sample(self.weak_learners, min(50, len(self.weak_learners)))
+        #learners = self.weak_learners[-50:]
+        learners = self.weak_learners
+        predictions = [h.predict(features)[0] for h in learners]
         result = float(sum(predictions)) # Cast since we'll normally get a numpy float.
         
         return result

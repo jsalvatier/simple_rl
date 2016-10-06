@@ -30,12 +30,15 @@ class LinearApproxQLearnerAgent(QLearnerAgent):
         Summary:
             Updates the internal Q Function according to the Bellman Equation. (Classic Q Learning update)
         '''
+
         # If this is the first state, initialize state-relevant data and return.
+        if not hasattr(self, 'weights'): #state is None:
+            self.num_features = len(next_state.features())
+            self.weights = numpy.array([0.0 for x in xrange(self.num_features*len(self.actions))])
+
         if state is None:
             self.prev_state = next_state
-            self.num_features = len(next_state.features())
-            self.weights = numpy.array([0 for x in xrange(self.num_features*len(self.actions))])
-            return
+            return 
 
         self._update_weights(reward, next_state)
 
@@ -85,7 +88,10 @@ class LinearApproxQLearnerAgent(QLearnerAgent):
 
         # Sparsely update the weights (only update weights associated with the action we used).
         for i in xrange(active_feats_index, active_feats_index + self.num_features):
-            self.weights[i] = self.weights[i] + self.alpha * phi[i] * self.most_recent_loss
+            newweight = self.weights[i] + self.alpha * phi[i] * self.most_recent_loss
+
+            self.weights[i] = newweight
+
 
     def get_q_value(self, state, action):
         '''
@@ -98,5 +104,7 @@ class LinearApproxQLearnerAgent(QLearnerAgent):
         '''
 
         # Return linear approximation of Q value
+        #if state.is_terminal():
+        #return 0
         sa_feats = self._phi(state, action)
         return numpy.dot(self.weights, sa_feats)
